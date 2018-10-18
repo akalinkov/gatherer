@@ -1,10 +1,10 @@
 <h1>New Project</h1>
-<% form_for(@project) do |f| %>
-  <% f.label(:name) %>
-  <% f.text_field(:name) %>
+<%= form_for(@project) do |f| %>
+  <%= f.label(:name, 'Name') %>
+  <%= f.text_field(:name) %>
   <br />
-  <% f.label(:task) %>
-  <% text_area_tag("project[tasks]") %>
+  <%= f.label(:tasks) %>
+  <%= text_area_tag("project[tasks]") %>
   <br />
-  <% f.submit %>
+  <%= f.submit %>
 <% end %>
