@@ -33,3 +33,5 @@
 # Ignore Intellij Idea files
 .idea
 *.iml
+
+/spec/examples.txt
