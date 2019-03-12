@@ -49,7 +49,8 @@ describe Project do
     end
 
     it 'can calculate remaining size' do
-      expect(project.remaining_size).to eq(5)
+      expect(project).to be_of_size(5).for_incomplete_tasks_only
+      # expect(project.remaining_size).to eq(5)
     end
 
     it 'knows its velocity' do
