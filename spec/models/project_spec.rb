@@ -1,4 +1,5 @@
 require 'rails_helper'
+# require 'support/size_matcher'
 
 describe Project do
 
@@ -43,7 +44,8 @@ describe Project do
     end
 
     it 'can calculate total size' do
-      expect(project.size).to eq(10)
+      expect(project).to be_of_size(10)
+      expect(project).not_to be_of_size(5)
     end
 
     it 'can calculate remaining size' do
