@@ -21,7 +21,6 @@ describe Task do
 
     it 'does not count an incomplete task toward velocity' do
       expect(task).not_to be_a_part_of_velocity
-
       expect(task.points_toward_velocity).to eq(0)
     end
 

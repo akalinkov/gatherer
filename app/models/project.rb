@@ -1,8 +1,6 @@
 class Project < ApplicationRecord
   include Sizeable
 
-  #
-
   has_many :tasks, dependent: :destroy
   validates :name, presence: true
 
@@ -19,11 +17,11 @@ class Project < ApplicationRecord
   end
 
   def size
-    tasks.sum( &:size )
+    tasks.sum(&:size)
   end
 
   def remaining_size
-    incomplete_tasks.sum(&:size )
+    incomplete_tasks.sum(&:size)
   end
 
   def completed_velocity
@@ -40,6 +38,6 @@ class Project < ApplicationRecord
 
   def on_schedule?
     return false if projected_days_remaining.nan?
-    ( Time.zone.today + projected_days_remaining ) <= due_date
+    (Time.zone.today + projected_days_remaining) <= due_date
   end
 end

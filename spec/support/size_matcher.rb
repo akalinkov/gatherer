@@ -9,11 +9,11 @@ RSpec::Matchers.define :be_of_size do |expected|
   end
 
   failure_message do |actual|
-    "expected project #{actual} to have size #{expected}, was #{actual}"
+    "expected project #{actual.name} to have size #{expected}, was #{actual}"
   end
 
   failure_message_when_negated do |actual|
-    "expected project #{actual} not to have size #{expected}, but it did"
+    "expected project #{actual.name} not to have size #{expected}, but it did"
   end
 
   chain :for_incomplete_tasks_only do

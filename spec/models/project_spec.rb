@@ -1,47 +1,46 @@
 require 'rails_helper'
-# require 'support/size_matcher'
 
 describe Project do
 
   it_should_behave_like 'sizeable'
 
   describe 'completion' do
-    let(:project) { Project.new }
-    let(:task) { Task.new }
+    describe 'without a task' do
+      let(:project) { build_stubbed(:project) }
 
-    it 'considers a project with no tasks to be done' do
-      expect(project.done?).to be_truthy
+      it 'considers a project with no tasks to be done' do
+        expect(project.done?).to be_truthy
+      end
+
+      it 'properly handles a blank project' do
+        expect(project.completed_velocity).to eq(0)
+        expect(project.current_rate).to eq(0)
+        expect(project.projected_days_remaining).to be_nan
+        expect(project).not_to be_on_schedule
+      end
     end
 
-    it 'knows that a project with an incomplete tasks is not done' do
-      project.tasks << task
-      expect(project.done?).to be_falsey
-    end
+    describe 'with a task' do
+      let(:task) { build_stubbed(:task) }
+      let(:project) { build_stubbed(:project, tasks: [task]) }
 
-    it 'marks a project done if its tasks are done' do
-      project.tasks << task
-      task.mark_completed
-      expect(project).to be_done
-    end
+      it 'knows that a project with an incomplete tasks is not done' do
+        expect(project).not_to be_done
+      end
 
-    it 'properly handles a blank project' do
-      expect(project.completed_velocity).to eq(0)
-      expect(project.current_rate).to eq(0)
-      expect(project.projected_days_remaining).to be_nan
-      expect(project).not_to be_on_schedule
+      it 'marks a project done if its tasks are done' do
+        task.mark_completed
+        expect(project).to be_done
+      end
     end
   end
 
   describe 'estimates' do
-    let(:project) { Project.new }
-    let(:newly_done) { Task.new(size: 3, completed_at: 1.day.ago) }
-    let(:old_done) { Task.new(size: 2, completed_at: 6.months.ago) }
-    let(:small_not_done) { Task.new(size: 1) }
-    let(:large_not_done) { Task.new(size: 4) }
-
-    before(:each) do
-      project.tasks = [newly_done, old_done, small_not_done, large_not_done]
-    end
+    let(:project) { build_stubbed(:project, tasks: [newly_done, old_done, small_not_done, large_not_done]) }
+    let(:newly_done) { build_stubbed(:task, :newly_complete) }
+    let(:old_done) { build_stubbed(:task, :long_complete, :small) }
+    let(:small_not_done) { build_stubbed(:task, :small) }
+    let(:large_not_done) { build_stubbed(:task, :large) }
 
     it 'can calculate total size' do
       expect(project).to be_of_size(10)
@@ -49,8 +48,7 @@ describe Project do
     end
 
     it 'can calculate remaining size' do
-      expect(project).to be_of_size(5).for_incomplete_tasks_only
-      # expect(project.remaining_size).to eq(5)
+      expect(project).to be_of_size(6).for_incomplete_tasks_only
     end
 
     it 'knows its velocity' do
@@ -62,7 +60,7 @@ describe Project do
     end
 
     it 'knows its projected days remaining' do
-      expect(project.projected_days_remaining).to eq(35)
+      expect(project.projected_days_remaining).to eq(42)
     end
 
     it 'knows if it is not on schedule' do

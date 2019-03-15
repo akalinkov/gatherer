@@ -9,8 +9,8 @@ class ProjectsController < ApplicationController
 
   def create
     @workflow = CreatesProject.new(
-        name: params[:project][:name],
-        task_string: params[:project][:tasks])
+      name: params[:project][:name],
+      task_string: params[:project][:tasks])
     @workflow.create
     if @workflow.success?
       redirect_to projects_path
