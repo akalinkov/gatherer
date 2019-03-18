@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 class Task < ApplicationRecord
   include Sizeable
 
