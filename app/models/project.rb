@@ -1,7 +1,10 @@
-require 'spec_helper'
-
 class Project < ApplicationRecord
-  has_many :tasks, dependent: :destroy
+  include Sizeable
+
+  has_many :tasks, -> { order 'project_order ASC' },
+    dependent: :destroy, inverse_of: :project
+
+  validates :name, presence: true
 
   def self.velocity_length_in_days
     21
@@ -15,12 +18,12 @@ class Project < ApplicationRecord
     incomplete_tasks.empty?
   end
 
-  def total_size
-    tasks.sum( &:size )
+  def size
+    tasks.sum(&:size)
   end
 
   def remaining_size
-    incomplete_tasks.sum(&:size )
+    incomplete_tasks.sum(&:size)
   end
 
   def completed_velocity
@@ -37,6 +40,11 @@ class Project < ApplicationRecord
 
   def on_schedule?
     return false if projected_days_remaining.nan?
-    ( Time.zone.today + projected_days_remaining ) <= due_date
+    (Time.zone.today + projected_days_remaining) <= due_date
+  end
+
+  def next_task_order
+    return 1 if tasks.empty?
+    (tasks.last.project_order || tasks.size) + 1
   end
 end
