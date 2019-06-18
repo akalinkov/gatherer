@@ -9,12 +9,18 @@ class TasksController < ApplicationController
 
   def up
     @task.move_up
-    redirect_to(@task.project)
+    respond_to do |format|
+      format.html { redirect_to(@task.project) }
+      format.json { head :ok }
+    end
   end
 
   def down
     @task.move_down
-    redirect_to(@task.project)
+    respond_to do |format|
+      format.html { redirect_to(@task.project) }
+      format.json { head :ok }
+    end
   end
 
   private
